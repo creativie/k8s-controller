@@ -57,6 +57,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", "info", "Set the log level (trace, debug, info, warn, error)")
-	rootCmd.PersistentFlags().IntVarP(&serverPort, "port", "p", 8080, "Set the server port (default is 8080)")
+	rootCmd.Flags().StringVar(&logLevel, "log-level", "info", "Set the log level (trace, debug, info, warn, error)")
+	rootCmd.Flags().IntVar(&serverPort, "port", 8080, "Set the server port (default is 8080)")
 }
+

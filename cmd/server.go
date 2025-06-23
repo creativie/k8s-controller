@@ -15,8 +15,14 @@ import (
 func StartHttpServer(port int) {
 	handler := func(ctx *fasthttp.RequestCtx) {
 		request_uid := uuid.New().String()
-		fmt.Fprintf(ctx, "Hello from FastHTTP!\nYour IP is %q\n", ctx.RemoteIP())
+		ctx.Response.Header.SetServer("k8s-controller")
+		if string(ctx.RequestURI()) == "/api/liveness" || string(ctx.RequestURI()) == "/api/readiness" {
+			ctx.SetContentType("application/json")
 
+			fmt.Fprintf(ctx, "{\"health\":\"ok\"}")
+		} else {
+			fmt.Fprintf(ctx, "Hello from FastHTTP!\nYour IP is %q\n", ctx.RemoteIP())
+		}
 		log.Info().
 			Str("SERVER_ADDR", ctx.LocalAddr().String()).
 			Str("REMOTE_ADDR", ctx.RemoteIP().String()).
